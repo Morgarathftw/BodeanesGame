@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BodeanesGame", "BodeanesGame.csproj", "{D43B8816-5BE3-8045-E2FE-E3E8D78A01D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BodeanesGame.CSharp", "BodeanesGame.CSharp.csproj", "{65AD7BF6-3811-C441-9A3D-6A548D80753E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D43B8816-5BE3-8045-E2FE-E3E8D78A01D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D43B8816-5BE3-8045-E2FE-E3E8D78A01D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D43B8816-5BE3-8045-E2FE-E3E8D78A01D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D43B8816-5BE3-8045-E2FE-E3E8D78A01D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65AD7BF6-3811-C441-9A3D-6A548D80753E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65AD7BF6-3811-C441-9A3D-6A548D80753E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65AD7BF6-3811-C441-9A3D-6A548D80753E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65AD7BF6-3811-C441-9A3D-6A548D80753E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
