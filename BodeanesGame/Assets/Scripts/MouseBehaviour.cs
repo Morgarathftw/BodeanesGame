@@ -8,31 +8,21 @@ public class MouseBehaviour : MonoBehaviour {
     public GameObject Water;
 
     public enum MouseState { INACTIVE, ACTIVE }; // Inactive = nothing, Active = placing an object
-    public enum TerrainType { NOTHING, GRASS, WATER }; //object being placed
+    public enum TerrainType { NOTHING, SELL, GRASS, WATER }; //object being placed
 
-    public int WorldHeight = 18;
-    public int WorldWidth = 32;
-
-    public struct WorldInfo
-    {
-        public TerrainType _TerrainType;
-        public Vector2 _TerrainPosition;
-    }
-
-    public List<WorldInfo> m_WorldInfo = new List<WorldInfo>();
+    public List<GameObject> m_WorldInfo = new List<GameObject>();
 
     public Sprite[] m_CurrentSprite; // 0 = nothing, 1 = grass, 2 = water
 
-    public Vector2 LastPosition;
-    public Vector2 MousePosition;
+    public Vector3 MousePosition;
 
     public MouseState m_MouseState;
     public TerrainType m_TerrainType;
 
     // Use this for initialization
     void Start () {
-        MousePosition = new Vector2(0.0f, 0.0f);
-        LastPosition = new Vector2(0.0f, 0.0f);
+        MousePosition = new Vector3(0.0f, 0.0f, 0.0f);
+        MousePosition = new Vector3(0.0f, 0.0f, 0.0f);
 
         m_MouseState = MouseState.INACTIVE;
         m_TerrainType = TerrainType.NOTHING;
@@ -53,12 +43,7 @@ public class MouseBehaviour : MonoBehaviour {
             MousePosition.x = Mathf.Floor(MousePos3D.x + 0.5f);
             MousePosition.y = Mathf.Floor(MousePos3D.y + 0.5f);
 
-            if (MousePosition != LastPosition) //If this mouse grid position is different from the last
-            {
-                LastPosition = MousePosition; //Set position
-                GetComponent<Transform>().position = new Vector3(LastPosition.x, LastPosition.y, GetComponent<Transform>().position.z);
-                Debug.Log("x: " + LastPosition.x + "  y: " + LastPosition.y);
-            }
+            GetComponent<Transform>().position = new Vector3(MousePosition.x, MousePosition.y, GetComponent<Transform>().position.z);
             HandleLeftClick();
         }   
     }
@@ -66,7 +51,13 @@ public class MouseBehaviour : MonoBehaviour {
 
     void GetInput()
     {
-        //Enabke mouse hover Select Terrain
+        //Enable mouse hover Select Terrain
+        if (Input.GetKeyDown("s")) //Keydown 1
+        {
+            m_MouseState = MouseState.ACTIVE;
+            m_TerrainType = TerrainType.SELL;
+            GetComponent<SpriteRenderer>().sprite = m_CurrentSprite[0];
+        }
         if (Input.GetKeyDown(KeyCode.Alpha1)) //Keydown 1
         {
             m_MouseState = MouseState.ACTIVE;
@@ -96,46 +87,74 @@ public class MouseBehaviour : MonoBehaviour {
 
     void HandleLeftClick()
     {
-        if (Input.GetMouseButton(0)) //Mousedown right click
+        if (Input.GetMouseButton(0)) //Mousedown left click
         {
-            int _iCounter = 0;
-            //int _iIndex = -1;
-            Debug.Log("Size of array = " + m_WorldInfo.Count);
+            bool _bExistingTile = false;
+            int _iIndex = -1;
             for (int i = 0; i < m_WorldInfo.Count; ++i)
             {
-                Debug.Log("Array index = " + i);
-                if (m_WorldInfo[i]._TerrainPosition == LastPosition)
+                if (m_WorldInfo[i].GetComponent<Transform>().position == MousePosition)
                 {
-                    Debug.Log("Position exists");
-                    _iCounter += 1;
+                    _bExistingTile = true;
+                    _iIndex = i;
                     break;
                 }
             }
 
-            if (_iCounter == 0)
+            if (_bExistingTile == false)
             {
-                Debug.Log("Making new info");
-                WorldInfo _tempInfo;
-                _tempInfo._TerrainPosition = LastPosition;
-                _tempInfo._TerrainType = m_TerrainType;
-                m_WorldInfo.Add(_tempInfo);
-
                 if (m_TerrainType == TerrainType.GRASS)
                 {
-                    GameObject NewTerrain = (GameObject)Instantiate(Grass);
-                    NewTerrain.transform.position = new Vector3(LastPosition.x, LastPosition.y, 0.0f);
+                    CreateTerrain();
                 }
                 else if (m_TerrainType == TerrainType.WATER)
                 {
-                    GameObject NewTerrain = (GameObject)Instantiate(Water);
-                    NewTerrain.transform.position = new Vector3(LastPosition.x, LastPosition.y, 0.0f);
+                    CreateTerrain();
                 }          
-               
-                Debug.Log("Info pushed");
             }
-
-            Debug.Log("Leaving struct");
+            else
+            {
+                if (m_WorldInfo[_iIndex].tag == "Grass" && m_TerrainType == TerrainType.WATER)
+                {
+                    DeleteTerrain(_iIndex);
+                    CreateTerrain();
+                }
+                else if (m_WorldInfo[_iIndex].tag == "Water" && m_TerrainType == TerrainType.GRASS)
+                {
+                    DeleteTerrain(_iIndex);
+                    CreateTerrain();
+                }
+                else if (m_TerrainType == TerrainType.SELL)
+                {
+                    DeleteTerrain(_iIndex);
+                }
+            }
         }
     }
 
+
+    void CreateTerrain() //Create a block of terrain at cursor position = to the current mouse state
+    {
+        //Initialise variables for the instantiated object
+        GameObject NewTerrain;
+        Vector3 Position = new Vector3(MousePosition.x, MousePosition.y, 0.0f);
+        Quaternion Rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+
+        if (m_TerrainType == TerrainType.GRASS)
+        {
+            NewTerrain = (GameObject)Instantiate(Grass, Position, Rotation);
+            m_WorldInfo.Add(NewTerrain);
+        }
+        else if (m_TerrainType == TerrainType.WATER)
+        {
+            NewTerrain = (GameObject)Instantiate(Water, Position, Rotation);
+            m_WorldInfo.Add(NewTerrain);
+        }     
+    }
+
+    void DeleteTerrain(int _iIndex) //Delete the block below the mouse
+    {
+        GameObject.Destroy(m_WorldInfo[_iIndex]);
+        m_WorldInfo.RemoveAt(_iIndex);
+    }
 }
