@@ -58,7 +58,7 @@ public class MouseBehaviour : MonoBehaviour {
             m_TerrainType = TerrainType.SELL;
             GetComponent<SpriteRenderer>().sprite = m_CurrentSprite[0];
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1)) //Keydown 1
+        else if (Input.GetKeyDown(KeyCode.Alpha1)) //Keydown 1
         {
             m_MouseState = MouseState.ACTIVE;
             m_TerrainType = TerrainType.GRASS;
