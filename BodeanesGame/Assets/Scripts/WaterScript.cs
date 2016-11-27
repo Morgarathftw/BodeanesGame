@@ -54,93 +54,72 @@ public class WaterScript : MonoBehaviour {
 
         for (int i = 0; i < SecondLayer.Count; ++i)
         {
+            float _fx = SecondLayer[i].GetComponent<Transform>().position.x;
+            float _fy = SecondLayer[i].GetComponent<Transform>().position.y;
+
+            float _fxPos = GetComponent<Transform>().position.x;
+            float _fyPos = GetComponent<Transform>().position.y;
+
             if (SecondLayer[i].tag == "Water")
             {
-                if (SecondLayer[i].GetComponent<Transform>().position.x == GetComponent<Transform>().position.x && SecondLayer[i].GetComponent<Transform>().position.y == GetComponent<Transform>().position.y + 1)
+                if (_fx == _fxPos && _fy == _fyPos + 1)
                 {
                     m_bAbove = true;
                 }
-                if (SecondLayer[i].GetComponent<Transform>().position.x == GetComponent<Transform>().position.x && SecondLayer[i].GetComponent<Transform>().position.y == GetComponent<Transform>().position.y - 1)
+                if (_fx == _fxPos && _fy == _fyPos - 1)
                 {
                     m_bBelow = true;
                 }
-                if (SecondLayer[i].GetComponent<Transform>().position.y == GetComponent<Transform>().position.y && SecondLayer[i].GetComponent<Transform>().position.x == GetComponent<Transform>().position.x - 1)
+                if (_fx == _fxPos - 1 && _fy == _fyPos)
                 {
                     m_bLeft = true;
                 }
-                if (SecondLayer[i].GetComponent<Transform>().position.y == GetComponent<Transform>().position.y && SecondLayer[i].GetComponent<Transform>().position.x == GetComponent<Transform>().position.x + 1)
+
+                if (_fx == _fxPos + 1 && _fy == _fyPos)
                 {
                     m_bRight = true;
                 }
-
-                if (SecondLayer[i].GetComponent<Transform>().position.x == GetComponent<Transform>().position.x - 1 && SecondLayer[i].GetComponent<Transform>().position.y == GetComponent<Transform>().position.y + 1)
+                if (_fx == _fxPos - 1 && _fy == _fyPos + 1)
                 {
-                    
-                    if (m_bAbove && m_bLeft)
-                    {
-                        Debug.Log("TopLeft");
-                        m_bTopLeft = true;
-                    }
-                }
-                if (SecondLayer[i].GetComponent<Transform>().position.x == GetComponent<Transform>().position.x + 1 && SecondLayer[i].GetComponent<Transform>().position.y == GetComponent<Transform>().position.y + 1)
+                    m_bTopLeft = true;
+                }                
+                if (_fx == _fxPos + 1 && _fy == _fyPos + 1)
                 {
-                   
-                    if (m_bAbove && m_bRight)
-                    {
-                        Debug.Log("TopRight");
-                        m_bTopRight = true;
-                    }
-                }
-                if (SecondLayer[i].GetComponent<Transform>().position.x == GetComponent<Transform>().position.x - 1 && SecondLayer[i].GetComponent<Transform>().position.y == GetComponent<Transform>().position.y - 1)
+                    m_bTopRight = true;
+                }                
+                if (_fx == _fxPos - 1 && _fy == _fyPos - 1)
                 {
-                    
-                    if (m_bBelow && m_bLeft)
-                    {
-                        Debug.Log("BotLeft");
-                        m_bBotLeft = true;
-                    }
-                }
-                if (SecondLayer[i].GetComponent<Transform>().position.x == GetComponent<Transform>().position.x + 1 && SecondLayer[i].GetComponent<Transform>().position.y == GetComponent<Transform>().position.y - 1)
+                    m_bBotLeft = true;
+                }                
+                if (_fx == _fxPos + 1 && _fy == _fyPos - 1)
                 {
-                    
-                    if (m_bBelow && m_bRight)
-                    {
-                        Debug.Log("BotRight");
-                        m_bBotRight = true;
-                    }
+                    m_bBotRight = true;
                 }
-
-
-                if (m_bAbove) m_Waters[0].SetActive(true);
-                else m_Waters[0].SetActive(false);
-
-                if (m_bBelow) m_Waters[1].SetActive(true);
-                else m_Waters[1].SetActive(false);
-
-                if (m_bLeft) m_Waters[2].SetActive(true);
-                else m_Waters[2].SetActive(false);
-
-                if (m_bRight) m_Waters[3].SetActive(true);
-                else m_Waters[3].SetActive(false);
-
-                if (m_bTopLeft) m_Waters[4].SetActive(true);
-                else m_Waters[4].SetActive(false);
-
-                if (m_bTopRight) m_Waters[5].SetActive(true);
-                else m_Waters[5].SetActive(false);
-
-                if (m_bBotLeft) m_Waters[6].SetActive(true);
-                else m_Waters[6].SetActive(false);
-
-                if (m_bBotRight) m_Waters[7].SetActive(true);
-                else m_Waters[7].SetActive(false);
-
             }
         }
 
+        if (m_bAbove) m_Waters[0].SetActive(true);
+        else m_Waters[0].SetActive(false);
 
-        
+        if (m_bBelow) m_Waters[1].SetActive(true);
+        else m_Waters[1].SetActive(false);
 
+        if (m_bLeft) m_Waters[2].SetActive(true);
+        else m_Waters[2].SetActive(false);
 
+        if (m_bRight) m_Waters[3].SetActive(true);
+        else m_Waters[3].SetActive(false);
+
+        if (m_bTopLeft && m_bAbove && m_bLeft) m_Waters[4].SetActive(true);
+        else m_Waters[4].SetActive(false);
+
+        if (m_bTopRight && m_bAbove && m_bRight) m_Waters[5].SetActive(true);
+        else m_Waters[5].SetActive(false);
+
+        if (m_bBotLeft && m_bBelow && m_bLeft) m_Waters[6].SetActive(true);
+        else m_Waters[6].SetActive(false);
+
+        if (m_bBotRight && m_bBelow && m_bRight) m_Waters[7].SetActive(true);
+        else m_Waters[7].SetActive(false);
     }
 }

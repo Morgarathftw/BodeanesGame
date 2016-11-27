@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class MouseBehaviour : MonoBehaviour {
 
+    public int m_iCurrency = 50;
+
     public Vector2 m_CameraPos = new Vector2(0.0f, 0.0f);
 
     public GameObject Grass;
@@ -223,26 +225,31 @@ public class MouseBehaviour : MonoBehaviour {
 
 
     void CreateTerrain(float _fx, float _fy) //Create a block of terrain at cursor position = to the current mouse state
-    {
-        m_iTerrainChanges++;
+    {        
         //Initialise variables for the instantiated object
         GameObject NewTerrain;
         Quaternion Rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
 
-        if (m_TerrainType == TerrainType.GRASS)
+        if (m_TerrainType == TerrainType.GRASS && m_iCurrency >= 1)
         {
+            m_iCurrency -= 1;
+            m_iTerrainChanges++;
             Vector3 Position = new Vector3(_fx, _fy, Grass.GetComponent<Transform>().position.z);
             NewTerrain = (GameObject)Instantiate(Grass, Position, Rotation);
             m_FirstLayer.Add(NewTerrain);
         }
-        else if (m_TerrainType == TerrainType.WATER)
+        else if (m_TerrainType == TerrainType.WATER && m_iCurrency >= 2)
         {
+            m_iCurrency -= 2;
+            m_iTerrainChanges++;
             Vector3 Position = new Vector3(_fx, _fy, Water.GetComponent<Transform>().position.z);
             NewTerrain = (GameObject)Instantiate(Water, Position, Rotation);
             m_SecondLayer.Add(NewTerrain);
         }
-        else if (m_TerrainType == TerrainType.PATH)
+        else if (m_TerrainType == TerrainType.PATH && m_iCurrency >= 2)
         {
+            m_iCurrency -= 2;
+            m_iTerrainChanges++;
             Vector3 Position = new Vector3(_fx, _fy, PathPrefab.GetComponent<Transform>().position.z);
             NewTerrain = (GameObject)Instantiate(PathPrefab, Position, Rotation);
             m_SecondLayer.Add(NewTerrain);
@@ -252,12 +259,21 @@ public class MouseBehaviour : MonoBehaviour {
     void DeleteGrassLayer(int _iIndex) //Delete the block below the mouse
     {
         m_iTerrainChanges--;
+        m_iCurrency += 1;
         GameObject.Destroy(m_FirstLayer[_iIndex]);
         m_FirstLayer.RemoveAt(_iIndex);
     }
 
     void DeleteSecondLayer(int _iIndex) //Delete the block below the mouse
     {
+        if (m_TerrainLock == TerrainType.WATER)
+        {
+            m_iCurrency += 2;
+        }
+        else if (m_TerrainLock == TerrainType.PATH)
+        {
+            m_iCurrency += 2;
+        }
         m_iTerrainChanges--;
         GameObject.Destroy(m_SecondLayer[_iIndex]);
         m_SecondLayer.RemoveAt(_iIndex);
